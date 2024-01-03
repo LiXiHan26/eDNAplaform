@@ -1,0 +1,220 @@
+{% extends "layouts/base.html" %}
+{% load crispy_forms_tags %}
+{% load tailwind_filters %}
+{% load static %}
+{% block title %} 下载 {% endblock %} 
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+<!-- <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet"> -->
+{% endblock stylesheets %}
+
+<!-- Content goes here -->
+{% block content %}
+<div class="pcoded-content">
+    <div class="pcoded-inner-content">
+        <div class="page-header">
+            <div class="page-block">
+                <div class="row align-items-center">
+                    <div class="col-md-12">
+                        <div class="page-header-title">
+                            <h5 class="m-b-10">物种数据下载</h5>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <!-- [ breadcrumb ] end -->
+        <div class="main-body">
+            <div class="page-wrapper">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>NCBI检索下载</h5>
+                            </div>
+                            <div class="card-block table-border-style">
+                                <form method="post" enctype="multipart/form-data" id="ncbiForm">
+                                    {% csrf_token %}
+                                    {{ NcbiDownloadDataForm|crispy }}
+                                    <input type="button" class="btn btn-primary shadow-lg" id="NCBISubmit" value="提交"></button>
+                                    <input type="button" class="btn btn-warning shadow-lg" id="NCBIUpdate" value="Tax更新" data-bs-toggle="tooltip" data-bs-placement="top" title="更新NCBI的Taxonomy"></button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- [ Main Content ] end -->
+            </div>
+        </div>
+        <div class="toast-container">
+            <div class="position-fixed bottom-0 right-0 p-3" style="z-index: 5; right: 0; bottom: 0;" role="alert">
+                <div class="toast" id="downloadToast1" data-bs-autohide="false">
+                    <div class="toast-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-download" viewBox="0 0 16 16">
+                            <path d="M4.406 1.342A5.53 5.53 0 0 1 8 0c2.69 0 4.923 2 5.166 4.579C14.758 4.804 16 6.137 16 7.773 16 9.569 14.502 11 12.687 11H10a.5.5 0 0 1 0-1h2.688C13.979 10 15 8.988 15 7.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 2.825 10.328 1 8 1a4.53 4.53 0 0 0-2.941 1.1c-.757.652-1.153 1.438-1.153 2.055v.448l-.445.049C2.064 4.805 1 5.952 1 7.318 1 8.785 2.23 10 3.781 10H6a.5.5 0 0 1 0 1H3.781C1.708 11 0 9.366 0 7.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383z"/>
+                            <path d="M7.646 15.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 14.293V5.5a.5.5 0 0 0-1 0v8.793l-2.146-2.147a.5.5 0 0 0-.708.708l3 3z"/>
+                        </svg>
+                        <strong class="mr-auto">下载提示</strong>
+                        <button type="button" class="ml-2 mb-1 close" data-bs-dismiss="toast">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="toast-body">
+                        <p>数据文件正在检索请耐心等待</p>
+                        <div class="spinner-border text-success" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="position-fixed bottom-0 right-0 p-3" style="z-index: 5; right: 0; bottom: 0;" role="alert">
+                <div class="toast" id="downloadToast2" data-bs-autohide="false">
+                    <div class="toast-header">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-download" viewBox="0 0 16 16">
+                            <path d="M4.406 1.342A5.53 5.53 0 0 1 8 0c2.69 0 4.923 2 5.166 4.579C14.758 4.804 16 6.137 16 7.773 16 9.569 14.502 11 12.687 11H10a.5.5 0 0 1 0-1h2.688C13.979 10 15 8.988 15 7.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 2.825 10.328 1 8 1a4.53 4.53 0 0 0-2.941 1.1c-.757.652-1.153 1.438-1.153 2.055v.448l-.445.049C2.064 4.805 1 5.952 1 7.318 1 8.785 2.23 10 3.781 10H6a.5.5 0 0 1 0 1H3.781C1.708 11 0 9.366 0 7.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383z"/>
+                            <path d="M7.646 15.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 14.293V5.5a.5.5 0 0 0-1 0v8.793l-2.146-2.147a.5.5 0 0 0-.708.708l3 3z"/>
+                        </svg>
+                        <strong class="mr-auto">下载提示</strong>
+                        <button type="button" class="ml-2 mb-1 close" data-bs-dismiss="toast">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="toast-body">
+                        <p>数据文件检索成功，点击下载</p>
+                        <button type="button" class="btn btn-success shadow-lg" id="click_download">下载</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+<script>
+    var toastExample1 = document.getElementById('downloadToast1');
+    var toastExample2 = document.getElementById('downloadToast2');
+    var toastSuc1 = new bootstrap.Toast(toastExample1);
+    var toastSuc2 = new bootstrap.Toast(toastExample2);
+    var file_path = '';
+    var file_name = '';
+    $(function (){
+        bindClickNCBISub();
+        bindClickNCBIUpd();
+        bindClickNCBIDownload();
+    });
+    function bindClickNCBISub(){
+        $('#NCBISubmit').click(function (){
+            var form_value_num = 0;
+            var NCBIFormData = new FormData();
+            NCBIFormData.append('Email_Address', $('#id_Email_Address').val());
+            NCBIFormData.append('Database', $('#id_Database').val());
+            NCBIFormData.append('Query', $('#id_Query').val());
+            NCBIFormData.append('Batch_Size', $('#id_Batch_Size').val());
+            if($('#id_OriginalDownloadFile').prop('checked'))
+                NCBIFormData.append('OriginalDownloadFile', $('#id_OriginalDownloadFile').val());
+            NCBIFormData.append('csrfmiddlewaretoken', $('[name="csrfmiddlewaretoken"]').val());
+            NCBIFormData.append('SpeciesFile', $('#id_SpeciesFile')[0].files[0]);
+            for (var value of NCBIFormData.values()){
+                        console.log(value);
+                        if(value != '' && value != 'undefined') form_value_num ++;
+                    }
+            console.log(form_value_num);
+            if(form_value_num == 7){
+                toastSuc1.show();
+            }
+            $.ajax({
+                url: "{% url 'ncbi_download_data' %}",
+                type: "POST",
+                data: NCBIFormData,
+                cache: false,
+                processData: false,   // jQuery不要去处理发送的数据
+                contentType: false,   // jQuery不要去设置Content-Type请求头
+                async: true,
+                //res为返回前端的内容
+                success: function (res){
+                    console.log(res);
+                    if(res.error_status){
+                        window.location.replace(res.href);
+                    }
+                    if(res.success){
+                        file_path = res.file_path;
+                        file_name = res.file_name;
+                        console.log(file_path);
+                        console.log(file_name);
+                        toastSuc2.show();
+                    }
+                }
+            })
+        })
+    }
+    function bindClickNCBIUpd(){
+        $('#NCBIUpdate').click(function(){
+            toastSuc1.show();
+            $.ajax({
+                url: "{% url 'ncbi_tax_update' %}",
+                type: "GET",
+                cache: false,
+                processData: false,   // jQuery不要去处理发送的数据
+                contentType: false,   // jQuery不要去设置Content-Type请求头
+                async: true,
+                //res为返回前端的内容
+                success: function (res){
+                    if(res.error_status){
+                        window.location.replace(res.href);
+                    }
+                    if(res.success){
+                        toastSuc2.show();
+                    }
+                }
+            })
+        })
+    }
+    function bindClickNCBIDownload(){
+        $('#click_download').click(function(){
+            var download_form = new FormData();
+            download_form.append('csrfmiddlewaretoken', $('[name="csrfmiddlewaretoken"]').val());
+            download_form.append('file_path', file_path);
+            download_form.append('file_name', file_name);
+            $.ajax({
+                url: "{% url 'download' %}",
+                type: "POST",
+                data: download_form,
+                cache: false,
+                processData: false,   // jQuery不要去处理发送的数据
+                contentType: false,   // jQuery不要去设置Content-Type请求头
+                async: true,
+                //res为返回前端的内容
+                success: function(res){
+                    console.log(res);
+                    var input1 = $('<input>');
+                    input1.attr('type', 'hidden');
+                    input1.attr('name', 'file_path');
+                    input1.attr('value', file_path);
+                    var input2 = $('<input>');
+                    input2.attr('type', 'hidden');
+                    input2.attr('name', 'file_name');
+                    input2.attr('value', file_name);
+                    var input3 = $('<input>');
+                    input3.attr('type', 'hidden');
+                    input3.attr('name', 'csrfmiddlewaretoken');
+                    input3.attr('value', $('[name="csrfmiddlewaretoken"]').val());
+                    var form = $('<form action="/download-sequence" method="post"></form>');
+                    $('body').append(form);
+                    form.append(input1);
+                    form.append(input2);
+                    form.append(input3);
+                    form.submit(); 
+                }
+            })
+        })
+    }
+
+</script>
+{% endblock javascripts %}

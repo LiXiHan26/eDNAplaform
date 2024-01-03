@@ -1,0 +1,372 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block title %} Charts Morris {% endblock %} 
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+
+    <link rel="stylesheet" href="/static/assets/plugins/chart-morris/css/morris.css">
+
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="pcoded-content">
+    <div class="pcoded-inner-content">
+        <!-- [ breadcrumb ] start -->
+        <div class="page-header">
+            <div class="page-block">
+                <div class="row align-items-center">
+                    <!-- <div class="col-md-12">
+                        <div class="page-header-title">
+                            <h5 class="m-b-10">Morris Chart</h5>
+                        </div>
+
+                    </div> -->
+                </div>
+            </div>
+        </div>
+        <div class="main-body">
+            <div class="page-wrapper">
+                <!-- [ Main Content ] start -->
+                <div class="row">
+                    <!-- [ Morris Chart ] start -->
+                    <div class="col-xl-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>数据库存储概况</h5>
+                            </div>
+                            <div class="card-block" >
+                                <figure class="highcharts-figure">
+                                    <div id="book-count" style="height:400px"></div>
+                                </figure>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>最大数量排名</h5>
+                            </div>
+                            <div class="card-block">
+                                <figure class="highcharts-figure">
+                                <div id="top-borrow" style="height:400px"></div>
+                            </figure>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>保存数量</h5>
+                            </div>
+                            <div class="card-block">
+                                <figure class="highcharts-figure">
+                                <div id="record-status" style="height:400px"></div>
+                                </figure>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-xl-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>地图</h5>
+                            </div>
+                            <div class="card-block">
+                                <figure class="highcharts-figure">
+                                    <div id="map_china_tol" style="width: 800px;height:400px;"></div>
+                                </figure>
+
+                            </div>
+                        </div>
+                    </div>
+      
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<!-- <script type="text/javascript" src="https://code.highcharts.com/highcharts.js"> </script> -->
+<!-- <script type="text/javascript" src="https://code.highcharts.com/stock/11.1.0/highstock.js"> </script> -->
+<script type="text/javascript" src="https://code.highcharts.com/maps/highmaps.js"></script> 
+<script type="text/javascript" src="https://code.highcharts.com/modules/exporting.js"> </script> 
+<script type="text/javascript" src="https://code.highcharts.com/modules/export-data.js"></script> 
+<script type="text/javascript" src="https://code.highcharts.com/modules/accessibility.js"></script> 
+<script type="text/javascript" src="https://code.highcharts.com/modules/cylinder.js"></script>
+<script type="text/javascript" src="https://code.highcharts.com/highcharts-3d.js"></script>
+<!-- <script src="{% static 'assets/js/China.json' %}"></script> -->
+<script src="https://data.jianshukeji.com/geochina/china.js"></script>
+<script src="{% static 'assets/js/World.json' %}"></script>
+<script type="text/javascript">
+  var chart_top_stock_book = new Highcharts.Chart({
+    chart: {
+      renderTo: 'book-count',
+      type: 'column',
+      options3d: {
+        enabled: true,
+        alpha: 5,
+        beta: 15,
+        depth: 50,
+      }
+    },
+    title: {
+          text: 'Top 5 物种序列数量'
+      },
+    xAxis: {
+        categories: {{top_5_book_titles|safe}},
+    },
+    yAxis: {title: {text: 'Stock'}},
+    series: [{
+        type: 'column',
+        name: '数量',
+        data: {{top_5_book__quantities}},
+    }]
+});
+
+new Highcharts.Chart({
+chart: {
+    renderTo: 'top-borrow',
+    type: 'column',
+},
+title: {
+        text: 'Top 5 下载序列数量'
+    },
+    xAxis: {
+        categories: {{top_borrow_titles|safe}},
+
+    },
+    yAxis: {title: {text: 'Counts'}},
+    series: [{
+        type: 'column',
+        name: 'Count',
+        data: {{top_borrow_times}},
+        color:"#47CC8A",
+    }]
+});
+
+
+new Highcharts.Chart({
+    chart: {
+        type: 'pie',
+        renderTo: 'record-status',
+    },
+
+    tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+    },
+
+    title: {
+            text: '保存 / 未知 '
+        },
+    accessibility: {
+        point: {
+            valueSuffix: '%'
+        }
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.y:.0f}'  }    
+        }
+    },
+    series: [{
+        name: '物种数量',
+        colorByPoint: true,
+        data: [{
+            name: 'Open',
+            y: {{r_open |safe}},
+            color: "#F28B5B",
+        }, 
+            
+            { name: 'Closed',
+                y: {{r_close |safe}},
+                color: "#A169E7",
+            }
+        ]
+    }]
+});
+
+var map_china_tol_data = [{
+                "name": "北京",
+                "value": 480
+            },
+            {
+                "name": "天津",
+                "value": 136
+            }, {
+                "name": "河北",
+                "value": 318
+            }, {
+                "name": "山西",
+                "value": 133
+            }, {
+                "name": "内蒙古",
+                "value": 75
+            }, {
+                "name": "辽宁",
+                "value": 125
+            }, {
+                "name": "吉林",
+                "value": 93
+            }, {
+                "name": "黑龙江",
+                "value": 483
+            }, {
+                "name": "上海",
+                "value": 363
+            }, {
+                "name": "江苏",
+                "value": 631
+            }, {
+                "name": "浙江",
+                "value": 1233
+            }, {
+                "name": "安徽",
+                "value": 990
+            }, {
+                "name": "福建",
+                "value": 296
+            }, {
+                "name": "江西",
+                "value": 935
+            }, {
+                "name": "山东",
+                "value": 0
+            }, {
+                "name": "河南",
+                "value": 1273
+            }, {
+                "name": "湖北",
+                "value": 67800
+            }, {
+                "name": "湖南",
+                "value": 1018
+            }, {
+                "name": "广东",
+                "value": 1378
+            }, {
+                "name": "广西",
+                "value": 253
+            }, {
+                "name": "海南",
+                "value": 168
+            }, {
+                "name": "重庆",
+                "value": 576
+            }, {
+                "name": "四川",
+                "value": 540
+            }, {
+                "name": "贵州",
+                "value": 0
+            }, {
+                "name": "云南",
+                "value": 176
+            }, {
+                "name": "西藏",
+                "value": 1
+            }, {
+                "name": "陕西",
+                "value": 246
+            }, {
+                "name": "甘肃",
+                "value": 133
+            }, {
+                "name": "青海",
+                "value": 18
+            }, {
+                "name": "宁夏",
+                "value": 75
+            }, {
+                "name": "新疆",
+                "value": 0
+            }, {
+                "name": "台湾",
+                "value": 108
+            }, {
+                "name": "香港",
+                "value": 109
+            }, {
+                "name": "澳门",
+                "value": 110
+            }, {
+                "name": "南海诸岛",
+                "value": 0
+            }, {
+                "name": "南海诸岛",
+                "value": 99
+            }
+        ];
+
+
+// 初始化图表
+//map_china_tol：你的dom元素的id名
+var map = new Highcharts.Map('map_china_tol', {
+    title: {
+        text: '中国物种序列数量分布 '
+    },
+    mapNavigation: {
+        enabled: true,
+        enableButtons: true,
+        enableTouchZoom: false,
+        enableDoubleClickZoomTo: true,
+        buttonOptions: {
+				verticalAlign: 'bottom'
+			}
+    },
+    legend: {
+        shadow: true
+    },
+    colorAxis: {
+        dataClasses: [{
+            to: 1,
+            color: '#ffffff',
+        }, {
+            from: 1,
+            to: 59,
+            color: '#dad6ea',
+        }, {
+            from: 59,
+            to: 599,
+            color: '#9189bf',
+        }, {
+            from: 599,
+            to: 2999,
+            color: '#434395',
+        }, {
+            from: 2999,
+            color: '#002480',
+        }],
+
+    },
+    series: [{
+        data: map_china_tol_data,
+        name: '当前存在已知序列物种数量',
+        mapData: Highcharts.maps['cn/china'],
+        joinBy: 'name', // 根据 name 属性进行关联
+        // states: {
+		// 		hover: {
+		// 			color: '#a4edba'
+		// 		}
+		// 	},
+    }]
+});
+</script>
+
+{% endblock javascripts %}
