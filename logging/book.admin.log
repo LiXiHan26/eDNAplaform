@@ -36892,3 +36892,5 @@ ValueError: The view book.views.NcbiDownloadDataView didn't return an HttpRespon
 2024-01-03 15:34:43,726 tools.qcloud_cos.cos_client 276 INFO     generate built-in connection pool success. maxsize=10,10
 2024-01-03 15:34:49,720 django.utils.autoreload 597 INFO     Watching for file changes with StatReloader
 2024-01-03 15:34:50,037 tools.qcloud_cos.cos_client 276 INFO     generate built-in connection pool success. maxsize=10,10
+2024-01-18 21:58:46,224 django.utils.autoreload 668 INFO     Watching for file changes with StatReloader
+2024-01-18 21:58:46,866 tools.qcloud_cos.cos_client 276 INFO     generate built-in connection pool success. maxsize=10,10
